@@ -7,11 +7,16 @@
 var margin = { left:80, right:20, top:50, bottom:100 };
 var height = 500 - margin.top - margin.bottom, 
     width = 800 - margin.left - margin.right;
+console.log('Reduced width: ', width);
+console.log('Reduced height: ', height);
+console.log('SVG width: ', width + margin.left + margin.right);
+console.log('SVG height: ', height + margin.top + margin.bottom);
 
 var g = d3.select("#chart-area")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .attr('style', 'border: 1px solid black')
     .append("g")
         .attr("transform", "translate(" + margin.left + 
             ", " + margin.top + ")");

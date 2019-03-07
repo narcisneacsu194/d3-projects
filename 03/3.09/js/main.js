@@ -4,49 +4,49 @@
 *    3.9 - Margins and groups
 */
 
-var margin = { left:100, right:10, top:10, bottom:100 };
+const margins = { top: 10, right: 10, bottom: 100, left: 100 };
 
-var width = 600 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+const width = 600 - margins.right - margins.left;
+const height = 400 - margins.top - margins.bottom;
 
-var g = d3.select("#chart-area")
-    .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform", "translate(" + margin.left 
-            + ", " + margin.top + ")")
+const svg = d3.select('#chart-area')
+    .append('svg')
+    .attr('width', width + margins.right + margins.left)
+    .attr('height', height + margins.top + margins.bottom)
+    .attr('style', 'border: 3px solid black');
 
-d3.json("data/buildings.json").then(function(data){
-    // console.log(data);
+const g = svg.append('g')
+  .attr('transform', 'translate(' + margins.left + ', ' + margins.top + ')');
 
-    data.forEach(function(d) {
-        d.height = +d.height;
-    });
+d3.json('data/buildings.json').then((data) => {
+  data.forEach((building) => {
+    building.height = +building.height;
+  });
 
-    var x = d3.scaleBand()
-        .domain(data.map(function(d){
-            return d.name;
-        }))
-        .range([0, width])
-        .paddingInner(0.3)
-        .paddingOuter(0.3);
+  const x = d3.scaleBand()
+    .domain(data.map((building) => {
+      return building.name;
+    }))
+    .range([0, width])
+    .paddingInner(0.3)
+    .paddingOuter(0.3);
 
-    var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d){
-            return d.height;
-        })])
-        .range([0, height]);
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, (building) => { return building.height })])
+    .range([0, height]);
 
-    var rects = g.selectAll("rect")
-        .data(data)
-        
-    rects.enter()
-        .append("rect")
-            .attr("y", 0)
-            .attr("x", function(d){ return x(d.name); })
-            .attr("width", x.bandwidth)
-            .attr("height", function(d){ return y(d.height); })
-            .attr("fill", "grey");
-
-})
+  g.selectAll('rect')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('x', (building) => {
+      return x(building.name);
+    })
+    .attr('y', 20)
+    .attr('width', x.bandwidth)
+    .attr('height', (building) => {
+      return y(building.height);
+    })
+    .attr('fill', 'grey');
+  
+}).catch(error => console.log(error));

@@ -80,7 +80,9 @@ d3.json("data/buildings.json").then(function(data){
     
     rects.enter()
         .append("rect")
-            .attr("y", function(d){ return y(d.height); })
+            .attr("y", (building) => {
+              return y(building.height);
+            })
             .attr("x", function(d){ return x(d.name); })
             .attr("width", x.bandwidth)
             .attr("height", function(d){ return height - y(d.height); })

@@ -78,8 +78,8 @@ d3.json("data/revenues.json").then(function(data){
             .attr("width", x.bandwidth)
             .attr("fill", "grey");
 
-    d3.interval(function(){
-        console.log("Hello World");
+    d3.interval(() => {
+      console.log('Hello Woorld!');
     }, 1000);
 });
 

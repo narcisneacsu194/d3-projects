@@ -8,6 +8,9 @@ var margin = { left:80, right:20, top:50, bottom:100 };
 
 var width = 600 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
+
+let flag = true;
+const t = d3.transition().duration(750);
     
 var g = d3.select("#chart-area")
     .append("svg")
@@ -41,7 +44,7 @@ g.append("text")
     .text("Month");
 
 // Y Label
-g.append("text")
+const yLabel = g.append("text")
     .attr("y", -60)
     .attr("x", -(height / 2))
     .attr("font-size", "20px")
@@ -55,10 +58,13 @@ d3.json("data/revenues.json").then(function(data){
     // Clean data
     data.forEach(function(d) {
         d.revenue = +d.revenue;
+        d.profit = +d.profit;
     });
 
     d3.interval(function(){
-        update(data)
+        const newData = flag ? data : data.slice(1);
+        update(newData);
+        flag = !flag;
     }, 1000);
 
     // Run the vis for the first time
@@ -66,40 +72,48 @@ d3.json("data/revenues.json").then(function(data){
 });
 
 function update(data) {
+    const value = flag ? 'revenue' : 'profit';
     x.domain(data.map(function(d){ return d.month }));
-    y.domain([0, d3.max(data, function(d) { return d.revenue })])
+    y.domain([0, d3.max(data, function(d) { return d[value] })])
 
     // X Axis
     var xAxisCall = d3.axisBottom(x);
-    xAxisGroup.call(xAxisCall);;
+    xAxisGroup.transition(t).call(xAxisCall);;
 
     // Y Axis
     var yAxisCall = d3.axisLeft(y)
         .tickFormat(function(d){ return "$" + d; });
-    yAxisGroup.call(yAxisCall);
+    yAxisGroup.transition(t).call(yAxisCall);
 
-    // JOIN new data with old elements.
-    var rects = g.selectAll("rect")
-        .data(data);
+    const circles = g.selectAll('circle')
+      .data(data, (item) => {
+        return item.month;
+      });
 
-    // EXIT old elements not present in new data.
-    rects.exit().remove();
+    circles.exit()
+      .attr('fill', 'red')
+      .transition(t)
+        .attr('cy', y(0))
+      .remove();
 
-    // UPDATE old elements present in new data.
-    rects
-        .attr("y", function(d){ return y(d.revenue); })
-        .attr("x", function(d){ return x(d.month) })
-        .attr("height", function(d){ return height - y(d.revenue); })
-        .attr("width", x.bandwidth);
+    circles.enter()
+      .append('circle')
+      .attr('cx', (item) => {
+        return x(item.month) + x.bandwidth() / 2;
+      })
+      .attr('cy', y(0))
+      .attr('r', 5)
+      .attr('fill', 'grey')
+      .merge(circles)
+      .transition(t)
+        .attr('cx', (item) => {
+          return x(item.month) + x.bandwidth() / 2;
+        })
+        .attr('cy', (item) => {
+          return y(item[value]);
+        })
 
-    // ENTER new elements present in new data.
-    rects.enter()
-        .append("rect")
-            .attr("y", function(d){ return y(d.revenue); })
-            .attr("x", function(d){ return x(d.month) })
-            .attr("height", function(d){ return height - y(d.revenue); })
-            .attr("width", x.bandwidth)
-            .attr("fill", "grey");
-
+    const text = flag ? 'Revenue' : 'Profit';
+    yLabel.text(text);
 }
 

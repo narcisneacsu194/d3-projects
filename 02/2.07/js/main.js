@@ -4,36 +4,34 @@
 *    2.7 - Loading external data
 */
 
-d3.tsv("data/ages.tsv").then(function(data){
-    data.forEach(function(d){
-        d.age = +d.age;
-    });
+d3.json('data/ages.json').then((data) => {
 
-    var svg = d3.select("#chart-area").append("svg")
-        .attr("width", 400)
-        .attr("height", 400);
+  data.forEach((person) => {
+    person.age = +person.age;
+  });
 
-    var circles = svg.selectAll("circle")
-        .data(data);
+  const svg = d3.select('#chart-area')
+    .append('svg')
+    .attr('width', 400)
+    .attr('height', 400)
+    .attr('style', 'border: 3px solid black');
 
-    circles.enter()
-        .append("circle")
-            .attr("cx", function(d, i){
-                console.log(d);
-                return (i * 50) + 25;
-            })
-            .attr("cy", 25)
-            .attr("r", function(d){
-                return d.age * 2;
-            })
-            .attr("fill", function(d){
-                if (d.name == "Tony") {
-                    return "blue";
-                }
-                else {
-                    return "red";
-                }
-            });
-}).catch(function(error){
-    console.log(error);
-})
+  const circles = svg.selectAll('circle').data(data);
+
+  circles.enter()
+    .append('circle')
+    .attr('cx', (person, index) => {
+      return (index * 50) + 25;
+    })
+    .attr('cy', 25)
+    .attr('r', (person) => {
+      return person.age * 2;
+    })
+    .attr('fill', (person) => {
+      if(person.name === 'Tony'){
+        return 'blue';
+      }else{
+        return 'red';
+      }
+    })
+}).catch(error => console.log(error));
