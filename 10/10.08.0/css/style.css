@@ -54,3 +54,7 @@ body {
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
+
+.arc path {
+  stroke: #fff;
+}

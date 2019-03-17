@@ -6,10 +6,16 @@
 
 var parseTime = d3.timeParse("%d/%m/%Y");
 var formatTime = d3.timeFormat("%d/%m/%Y");
+var filteredData;
+var lineObj1;
+var lineObj2;
+var lineObj3;
+var lineObj4;
+var lineObj5;
 
 // Event listeners
-$("#coin-select").on("change", update)
-$("#var-select").on("change", update)
+$("#coin-select").on("change", updateCharts);
+$("#var-select").on("change", updateCharts);
 
 // Add jQuery UI slider
 $("#date-slider").slider({
@@ -21,7 +27,7 @@ $("#date-slider").slider({
     slide: function(event, ui){
         $("#dateLabel1").text(formatTime(new Date(ui.values[0])));
         $("#dateLabel2").text(formatTime(new Date(ui.values[1])));
-        update();
+        updateCharts();
     }
 });
 
@@ -44,6 +50,17 @@ d3.json("data/coins.json").then(function(data){
         });
     }
 
-    // Run the visualization for the first time
-    update();
-})
+    lineObj1 = new LineChart('#chart-area1', 'bitcoin');
+    lineObj2 = new LineChart('#chart-area2', 'ethereum');
+    lineObj3 = new LineChart('#chart-area3', 'bitcoin_cash');
+    lineObj4 = new LineChart('#chart-area4', 'litecoin');
+    lineObj5 = new LineChart('#chart-area5', 'ripple');
+});
+
+function updateCharts(){
+  lineObj1.wrangleData();
+  lineObj2.wrangleData();
+  lineObj3.wrangleData();
+  lineObj4.wrangleData();
+  lineObj5.wrangleData();
+};

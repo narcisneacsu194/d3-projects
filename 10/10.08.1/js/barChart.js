@@ -73,7 +73,7 @@ BarChart.prototype.initVis = function(){
 
 
 BarChart.prototype.wrangleData = function(){
-    var vis = this;
+    var vis = this;    
 
     vis.dataFiltered = nestedCalls.map(function(category){
         return {

@@ -64,7 +64,10 @@ DonutChart.prototype.wrangleData = function(){
             value: size.key,
             count: size.values.length
         }
-    })
+	})
+	
+	var datex = $('#dateLabel1').text();
+	console.log(`Data filtered for date ${datex}: `, vis.dataFiltered);
 
 	vis.updateVis();
 }

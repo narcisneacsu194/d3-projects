@@ -58,7 +58,9 @@ var tsvData = null;
         });
 
         // Set domains for axes
-        x.domain(d3.extent(data, function(d) { return d.date; }));
+        x.domain(d3.extent(data, function(d) { 
+          return d.date; 
+        }));
         y.domain([0, maxDateVal])
 
         stack.keys(keys);

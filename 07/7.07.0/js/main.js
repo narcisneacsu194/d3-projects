@@ -34,7 +34,9 @@ var width = 600,
 
         g.append("path")
             .attr("d", arc)
-            .style("fill", function(d) { return color(d.data.age); });
+            .style("fill", function(d) {
+              return color(d.data.age); 
+            });
 
         const legend = svg.append('g')
           .attr('transform', 'translate(' + (width / 2 - 10) + ', 0)');

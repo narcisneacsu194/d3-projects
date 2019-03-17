@@ -7,7 +7,9 @@ var width = 600,
 
     //d3.layout.pie()
     var pie = d3.pie()
-        .value(function(d) { return d.count; })
+        .value(function(d) { 
+          return d.count; 
+        })
         .sort(null);
 
     var arc = d3.arc()
